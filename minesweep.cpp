@@ -2,13 +2,20 @@
 #include <iostream>
 
 #include "board.h"
+#include "io.h"
 
-class board;
+
 int main(int argc, char** argv) {
+  board *bo = (board *) malloc(sizeof(board));
 
-  board *b = (board *) malloc(sizeof(board));
-  gen_board(b);
+  //uint32_t mines = 5;
 
-  return 0;
-  
+  gen_board(bo);
+  //get_mines(bo, mines);
+
+  print_map_w_m(bo);
+
+
+    return 0;
+
 }
