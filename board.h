@@ -10,7 +10,7 @@ struct board {
   tile map[MAP_Y][MAP_X]; /* Default 8x8 */
 };
 
-void gen_board(board *b);
+void gen_board(board *b, uint32_t num_mines);
 void get_mines(board *b, uint32_t num_mines);
 
 //uint32_t num_mines

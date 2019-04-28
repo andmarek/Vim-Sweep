@@ -7,17 +7,32 @@
 
 
 int main(int argc, char** argv) {
+  char in;
+  uint32_t num_mines;
   srand(time(NULL));
   board *bo = (board *) malloc(sizeof(board));
 
   //uint32_t mines = 5;
 
-  gen_board(bo);
+  std::cout << "1 for easy, 2 for medium, 3 for hard" << std::endl;
+  std::cin >> in;
+
+  if(in == '1') {
+    num_mines = 5;
+  }
+  else if(in == '2') {
+    num_mines = 8;
+  }
+  else {
+    num_mines = 10;
+  }
+
+  gen_board(bo, num_mines);
   //get_mines(bo, mines);
 
   print_map_w_m(bo);
 
 
-    return 0;
+  return 0;
 
 }

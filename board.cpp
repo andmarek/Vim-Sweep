@@ -7,10 +7,10 @@
 
 class board;
 
-void gen_board(board *b);
+void gen_board(board *b, uint32_t num_mines);
 void get_mines(board *b, uint32_t num_mines);
 
-void gen_board(board *b)
+void gen_board(board *b, uint32_t num_mines)
 {
   uint32_t i, j;
   for(i = 0; i < MAP_Y; i++) {
@@ -21,7 +21,7 @@ void gen_board(board *b)
 
     printf("\n");
   }
-  get_mines(b, 5);
+  get_mines(b, num_mines);
 }
 
 
