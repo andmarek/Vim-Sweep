@@ -36,8 +36,6 @@ void print_map_w_m(board *b)
 
     for(j = 0; j < MAP_X; j++) {
       if(( (b->sel.pos[0] != i) || b->sel.pos[1] != j)) {
-
-
         if(b->map[i][j].flag == 1) {
           attron(COLOR_PAIR(COLOR_RED));
           mvaddch(i + 1, j + 1, b->map[i][j].symb);
@@ -65,6 +63,7 @@ void print_map_w_m(board *b)
         attroff(COLOR_PAIR(COLOR_GREEN)); 
       }
     }
+
     if(i > 9) {
       mvprintw(0, i, "d", i % 10);
       mvprintw(i, 0, "d", i % 10);
@@ -76,6 +75,13 @@ void print_map_w_m(board *b)
     attroff(COLOR_PAIR(COLOR_MAGENTA));
 
   }
+  attron(COLOR_PAIR(COLOR_MAGENTA));
+  mvprintw(0, 16, "%d",6 );
+  mvprintw(16, 0, "%d",6 );
+  attroff(COLOR_PAIR(COLOR_MAGENTA));
+
+
+
 }
 
 void io_numbers(board *b)

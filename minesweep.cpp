@@ -56,7 +56,7 @@ int main(int argc, char** argv) {
   attroff(COLOR_PAIR(COLOR_GREEN));
   mvprintw(0, 0, "Press P to play");
   while(true) {
-    if((k = getch() == 'p')) {
+    if((k = getch() == 'P')) {
       clear();
       refresh();
       break;
