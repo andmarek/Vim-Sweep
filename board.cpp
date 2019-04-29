@@ -28,11 +28,18 @@ void gen_board(board *b, uint32_t num_mines)
   get_mines(b, num_mines);
 }
 
+bool is_mine(board *b, uint32_t y, uint32_t x) {
+  if(b->map[y][x].is_mine != 0) {
+    return true;
+  }
+  return false;
+}
+
 
 void get_mines(board *b, uint32_t num_mines)
 {
 
-  uint32_t count = 0;
+  uint32_t count = 1;
 
   while(count <= num_mines) {
 
@@ -77,7 +84,6 @@ void get_mines(board *b, uint32_t num_mines)
 
     count++;
   }
-  printf("all mines created\n");
 
 }
 

@@ -36,9 +36,9 @@ void print_map_w_m(board *b)
         if(b->map[i][j].is_mine == 0 ) {
 
           if(b->map[i][j].flag == 1) {
-            attron(COLOR_PAIR(COLOR_YELLOW));
+            attron(COLOR_PAIR(COLOR_RED));
             mvaddch(i + 1, j + 1, b->map[i][j].symb);
-            attroff(COLOR_PAIR(COLOR_YELLOW));
+            attroff(COLOR_PAIR(COLOR_RED));
 
           } else { 
             mvaddch(i + 1, j + 1, b->map[i][j].symb);
@@ -120,13 +120,57 @@ bool validate_move(int pos)
 
 }
 
+void set_flag(board *b)
+{
+  uint32_t y_pos, x_pos;
+
+  y_pos = b->sel.pos[0];
+  x_pos = b->sel.pos[1];
+
+  if(b->map[y_pos][x_pos].flag == 1) {
+    b->map[y_pos][x_pos].flag = 0;
+  } else {
+    b->map[y_pos][x_pos].flag = 1;
+  }
+
+  if( (is_mine(b, y_pos, x_pos)) ) {
+    b->flag_m++;
+    mvprintw(0, 0, "right: %d", b->flag_m);
+    refresh();
+  }
+  if(b->flag_m <= b->num_mines) {
+    b->eog = true;
+    endwin();
+  }
+}
+
 void move_selector(board *b) {
-  uint32_t key, y_pos, x_pos;
+  uint32_t key;
+
   while((key = getch())) {
     move(0, 0);
     clrtoeol();
-    //mvprintw(0, 0, "x pos is : %s", b->sel.pos[1]);
     switch(key) {
+      case '0':
+        b->sel.pos[1] = 0;
+        break;
+
+      case 'g':
+        if((key = getch()) == 'g') {
+          b->sel.pos[0] = 0;
+        } else {
+          move_selector(b);
+        }
+        break;
+
+      case 'G':
+        b->sel.pos[0] = 15;
+        break;
+
+      case 'A':
+        b->sel.pos[1] = 15;
+        break;
+
       case 'h':
         if(!(validate_move(b->sel.pos[1]-1))) {
           break;
@@ -163,16 +207,14 @@ void move_selector(board *b) {
         refresh();
         break;
 
-      case '\n': /* Set a flag, ENTER */
-        y_pos = b->sel.pos[0];
-        x_pos = b->sel.pos[1];
-        if(b->map[y_pos][x_pos].flag == 1) {
-          b->map[y_pos][x_pos].flag = 0;
-        } else {
-          b->map[y_pos][x_pos].flag = 1;
-        }
+      case 'm': /* Set a flag, ENTER */
+        set_flag(b); 
         refresh();
         break;
+
+      case 'i':
+        //choose
+        break; 
 
       case 'n': 
         io_numbers(b);
@@ -185,8 +227,17 @@ void move_selector(board *b) {
         refresh();
         break;
 
-      case 'q':
-        return;
+      case ':':
+        mvprintw(17, 0, ":");
+        if((key = getch()) == 'q') {
+          endwin();
+          printf("\n You quit.\n");
+          b->eog = true;
+          return;
+        } else {
+          move(17, 0);
+          clrtoeol();
+        }
         break;
 
       default:
