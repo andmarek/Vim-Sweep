@@ -4,6 +4,7 @@
 # include <math.h>
 #include "io.h"
 # include "board.h"
+
 # include <ncurses.h>
 
 class board;
@@ -102,7 +103,7 @@ void reveal_tile(board *b, uint32_t y, uint32_t x, uint32_t count)
     return;
   }
 
-  if(b->map[y][x].revealed != 0) {
+  if(b->map[y][x].revealed != 0 && b->map[y][x].is_mine == 0) {
     return;
   }
 
@@ -110,8 +111,10 @@ void reveal_tile(board *b, uint32_t y, uint32_t x, uint32_t count)
 
   if(b->map[b->sel.pos[0]][b->sel.pos[1]].is_mine == 2) {
     b->eog = true;
+    clear();
+    endwin();
     printf("\nYou hit a bomb! You lose. :(\n");
-    
+
     exit(0);
 
   } else {
