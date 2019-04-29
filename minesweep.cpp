@@ -18,20 +18,30 @@ int main(int argc, char** argv) {
   std::cin >> in;
 
   if(in == '1') {
+
     num_mines = 5;
   }
   else if(in == '2') {
+
     num_mines = 8;
   }
   else {
+
     num_mines = 10;
   }
 
   gen_board(bo, num_mines);
-  //get_mines(bo, mines);
+  gen_selector(bo);
+
+  init_curses();
 
   print_map_w_m(bo);
 
+  while(true) {
+
+    move_selector(bo);
+
+  }
 
   return 0;
 
