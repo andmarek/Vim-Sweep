@@ -16,6 +16,7 @@ void init_curses(void) {
   init_pair(COLOR_YELLOW, COLOR_YELLOW, COLOR_BLACK);
   init_pair(COLOR_CYAN, COLOR_CYAN, COLOR_BLACK);
   init_pair(COLOR_MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
+  init_pair(COLOR_BLUE, COLOR_BLUE, COLOR_BLACK);
 
 }
 
@@ -44,14 +45,19 @@ void print_map_w_m(board *b)
             attroff(COLOR_PAIR(COLOR_RED));
 
           } else { 
-            mvaddch(i + 1, j + 1, '#');
+            if(b->map[i][j].revealed == 1) {
+              attron(COLOR_PAIR(COLOR_BLUE));
+
+              mvaddch(i + 1, j + 1, '.');
+              attroff(COLOR_PAIR(COLOR_BLUE));
+            } else {
+              mvaddch(i + 1, j + 1, '#');
+            }
           } 
         } else if (b->map[i][j].is_mine == 2) {
 
           attron(COLOR_PAIR(COLOR_RED));
-
           mvaddch(i + 1, j + 1, 'M');
-
           attroff(COLOR_PAIR(COLOR_RED));
 
         }
@@ -229,6 +235,7 @@ void move_selector(board *b) {
 
       case 'i':
         reveal_tile(b, b->sel.pos[0], b->sel.pos[1]);
+        refresh();
         break; 
       case 'n': 
         io_numbers(b);
