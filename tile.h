@@ -8,6 +8,7 @@ class tile {
    uint32_t is_selector = 0;
    uint32_t flag = 0;
    uint32_t m_count;
+   uint32_t revealed = 0;
 };
 
 class selector : public tile {

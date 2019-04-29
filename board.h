@@ -21,5 +21,5 @@ void gen_board(board *b, uint32_t num_mines);
 void get_mines(board *b, uint32_t num_mines);
 void gen_selector(board *b);
 bool is_mine(board *b, uint32_t y, uint32_t x);
-
+void reveal_tile(board *b, uint32_t y, uint32_t x);
 # endif

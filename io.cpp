@@ -2,7 +2,7 @@
 #include <iostream>
 #include <ncurses.h>
 #include "board.h"
-
+#include <math.h>
 void init_curses(void) {
   initscr();
   raw();
@@ -15,6 +15,7 @@ void init_curses(void) {
   init_pair(COLOR_GREEN, COLOR_GREEN, COLOR_BLACK);
   init_pair(COLOR_YELLOW, COLOR_YELLOW, COLOR_BLACK);
   init_pair(COLOR_CYAN, COLOR_CYAN, COLOR_BLACK);
+  init_pair(COLOR_MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
 
 }
 
@@ -30,6 +31,8 @@ void print_map_w_m(board *b)
   uint32_t j;
 
   for(i = 0; i < MAP_Y; i++) {
+        
+
     for(j = 0; j < MAP_X; j++) {
       if(( (b->sel.pos[0] != i) || b->sel.pos[1] != j)) {
 
@@ -41,7 +44,7 @@ void print_map_w_m(board *b)
             attroff(COLOR_PAIR(COLOR_RED));
 
           } else { 
-            mvaddch(i + 1, j + 1, b->map[i][j].symb);
+            mvaddch(i + 1, j + 1, '#');
           } 
         } else if (b->map[i][j].is_mine == 2) {
 
@@ -59,6 +62,16 @@ void print_map_w_m(board *b)
         attroff(COLOR_PAIR(COLOR_GREEN)); 
       }
     }
+    if(i > 9) {
+      mvprintw(0, i, "d", i % 10);
+      mvprintw(i, 0, "d", i % 10);
+
+    }
+    attron(COLOR_PAIR(COLOR_MAGENTA));
+    mvprintw(0, i, "%d", i%10);
+    mvprintw(i, 0, "%d", i%10);
+    attroff(COLOR_PAIR(COLOR_MAGENTA));
+
   }
 }
 
@@ -113,9 +126,11 @@ void io_numbers(board *b)
 bool validate_move(int pos) 
 {
   if(pos <= -1 || pos >= 16) {
-    mvprintw(0, 0, "Nothing to see here!");
+    mvprintw(18, 0, "Nothing to see here!");
     return false;
   } 
+  move(18,0);
+  clrtoeol();
   return true;
 
 }
@@ -213,9 +228,8 @@ void move_selector(board *b) {
         break;
 
       case 'i':
-        //choose
+        reveal_tile(b, b->sel.pos[0], b->sel.pos[1]);
         break; 
-
       case 'n': 
         io_numbers(b);
         refresh();
