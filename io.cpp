@@ -110,33 +110,59 @@ void io_numbers(board *b)
   refresh();
 }
 
-void validate_move(board *b) 
+bool validate_move(int pos) 
 {
+  if(pos <= -1 || pos >= 16) {
+    mvprintw(0, 0, "Nothing to see here!");
+    return false;
+  } 
+  return true;
 
 }
+
 void move_selector(board *b) {
   uint32_t key, y_pos, x_pos;
   while((key = getch())) {
+    move(0, 0);
     clrtoeol();
     //mvprintw(0, 0, "x pos is : %s", b->sel.pos[1]);
     switch(key) {
       case 'h':
-        b->sel.pos[1] -= 1;
+        if(!(validate_move(b->sel.pos[1]-1))) {
+          break;
+        } else {
+          b->sel.pos[1]--;
+        }
         refresh();
         break;
+
       case 'j':
-        b->sel.pos[0] += 1;
+        if(!(validate_move(b->sel.pos[0]+1))) {
+          break;
+        } else {
+          b->sel.pos[0] += 1;
+        }
         refresh();
         break;
+
       case 'k':
-        b->sel.pos[0] -= 1;
+        if(!(validate_move(b->sel.pos[0]-1))) {
+          break;
+        } else {  
+          b->sel.pos[0] -= 1;
+        }
         refresh();
         break;
+
       case 'l':
-        b->sel.pos[1] += 1;
-        mvprintw(0, 0, "x pos is : %d", b->sel.pos[1]);
+        if(!(validate_move(b->sel.pos[1]+1))) {
+          break;
+        } else {
+          b->sel.pos[1] += 1;
+        }
         refresh();
         break;
+
       case '\n': /* Set a flag, ENTER */
         y_pos = b->sel.pos[0];
         x_pos = b->sel.pos[1];
@@ -147,21 +173,26 @@ void move_selector(board *b) {
         }
         refresh();
         break;
+
       case 'n': 
         io_numbers(b);
         refresh();
         move_selector(b);
         break;
+
       case 'r':
         print_map_w_m(b);
         refresh();
         break;
+
       case 'q':
-        break;
         return;
+        break;
+
       default:
         break;
     };
+
     print_map_w_m(b);
 
   }
