@@ -3,6 +3,7 @@
 ## Use
 * Requires GCC 7 or 8 (developed on GCC 8.3).  
 * This probably won't compile on Clang, this can be tested later (you should be using GCC anyway).
+* Requires ncurses library. 
 
 ## Controls
 * gg - Moves to top of screen.
