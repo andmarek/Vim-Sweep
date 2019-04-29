@@ -38,25 +38,25 @@ void print_map_w_m(board *b)
       if(( (b->sel.pos[0] != i) || b->sel.pos[1] != j)) {
 
 
-          if(b->map[i][j].flag == 1) {
-            attron(COLOR_PAIR(COLOR_RED));
-            mvaddch(i + 1, j + 1, b->map[i][j].symb);
-            attroff(COLOR_PAIR(COLOR_RED));
+        if(b->map[i][j].flag == 1) {
+          attron(COLOR_PAIR(COLOR_RED));
+          mvaddch(i + 1, j + 1, b->map[i][j].symb);
+          attroff(COLOR_PAIR(COLOR_RED));
 
-          } else { 
-            if(b->map[i][j].revealed == 1) {
-              if(b->m_num[i][j] > 0) {
-                attron(COLOR_PAIR(COLOR_CYAN));
-                mvprintw(i+1, j+1, "%d", b->m_num[i][j]);
-                attroff(COLOR_PAIR(COLOR_CYAN));
-              } else {
-                attron(COLOR_PAIR(COLOR_BLUE));
-                mvaddch(i + 1, j + 1, '.');
-                attroff(COLOR_PAIR(COLOR_BLUE));
-              }
+        } else { 
+          if(b->map[i][j].revealed == 1) {
+            if(b->m_num[i][j] > 0) {
+              attron(COLOR_PAIR(COLOR_CYAN));
+              mvprintw(i+1, j+1, "%d", b->m_num[i][j]);
+              attroff(COLOR_PAIR(COLOR_CYAN));
             } else {
-              mvaddch(i + 1, j + 1, '#');
+              attron(COLOR_PAIR(COLOR_BLUE));
+              mvaddch(i + 1, j + 1, '.');
+              attroff(COLOR_PAIR(COLOR_BLUE));
             }
+          } else {
+            mvaddch(i + 1, j + 1, '#');
+          }
         } 
       } else if( ( (b->sel.pos[0] == i) &&
             (b->sel.pos[1] == j) ) ) {
@@ -252,12 +252,22 @@ void move_selector(board *b) {
           endwin();
           printf("\n You quit.\n");
           b->eog = true;
-          return;
-        } else if((key = getch()) == 'w') {
-          endwin();
-          printf("\n You win!.\n"
-          b->eog = true;
-          return;
+          exit(0);
+          break;
+        } else if(key  == 'w') {
+          if(b->eog && b->flag_m == b->num_mines) {
+            endwin();
+            printf("\n You win!.\n");
+            b->eog = true;
+            exit(0);
+            break;
+          } else {
+            endwin();
+            printf("\n You lose. You didn't sweep all the bombs!.\n");
+            b->eog = true;
+            exit(0);
+            break;
+          }
         } else {
           move(17, 0);
           clrtoeol();

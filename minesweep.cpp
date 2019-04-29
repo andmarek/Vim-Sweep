@@ -35,15 +35,15 @@ int main(int argc, char** argv) {
   std::cin >> in ;
   if(in == '1') {
 
-    bo->num_mines = 5;
+    bo->num_mines = 10;
   }
   else if(in == '2') {
 
-    bo->num_mines = 8;
+    bo->num_mines = 15;
   }
   else {
 
-    bo->num_mines = 10;
+    bo->num_mines = 20;
   }
   printf("%d", bo->num_mines);
   gen_board(bo, bo->num_mines);
@@ -51,12 +51,18 @@ int main(int argc, char** argv) {
 
   init_curses();
   uint32_t k;
+  attron(COLOR_PAIR(COLOR_GREEN));
   mvprintw(1, 30, "%s", vim);
-
+  attroff(COLOR_PAIR(COLOR_GREEN));
+  mvprintw(0, 0, "Press P to play");
+  while(true) {
   if((k = getch() == 'p')) {
     clear();
-  }
+    refresh();
+    break;
+    } 
 
+  }
   print_map_w_m(bo);
 
   while(!bo->eog) {

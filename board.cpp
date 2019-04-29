@@ -2,8 +2,9 @@
 # include <stdlib.h>
 # include <cstring>
 # include <math.h>
-
+#include "io.h"
 # include "board.h"
+# include <ncurses.h>
 
 class board;
 
@@ -107,9 +108,11 @@ void reveal_tile(board *b, uint32_t y, uint32_t x, uint32_t count)
 
   if(b->map[y][x].flag == 1) return;
 
-  if(b->map[y][x].is_mine == 2) {
+  if(b->map[b->sel.pos[0]][b->sel.pos[1]].is_mine == 2) {
     b->eog = true;
-    return;
+    printf("\nYou hit a bomb! You lose. :(\n");
+    
+    exit(0);
 
   } else {
     b->map[y][x].revealed = 1;
