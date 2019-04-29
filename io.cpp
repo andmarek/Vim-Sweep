@@ -253,6 +253,11 @@ void move_selector(board *b) {
           printf("\n You quit.\n");
           b->eog = true;
           return;
+        } else if((key = getch()) == 'w') {
+          endwin();
+          printf("\n You win!.\n"
+          b->eog = true;
+          return;
         } else {
           move(17, 0);
           clrtoeol();

@@ -1,20 +1,38 @@
 #include <stdio.h>
 #include <iostream>
-
+#include <ncurses.h>
 #include "board.h"
 #include "io.h"
 #include <time.h>
 
 
 int main(int argc, char** argv) {
+  const char *vim =  
+ "                 .                    "
+ "   ##############..... ##############\n   "
+ "   ##############......############## \n  "
+ "     ##########..........##########   \n  "
+ "     ##########........##########      \n "
+ "     ##########.......##########       \n "
+ "     ##########.....##########..       \n "
+ "     ##########....##########.....     \n "
+ "   ..##########..##########.........   \n "
+ " ....##########.#########.............  \n"
+ "   ..################JJJ............    \n"
+ "     ################.............      \n"
+ "     ##############.JJJ.JJJJJJJJJJ      \n"
+ "     ############...JJ...JJ..JJ  JJ     \n"
+ "     ##########....JJ...JJ..JJ  JJ      \n"
+ "     ########......JJJ..JJJ JJJ JJJ     \n"
+ "     ######    .........                \n"
+ "                 .....                  \n"
+". ";
+
   srand(time(NULL));
   char in;
-//  uint32_t num_mines;
-    board *bo = (board *) malloc(sizeof(board));
-
-  std::cout << "1 for easy, 2 for medium, 3 for hard" << std::endl;
-  std::cin >> in;
-
+  board *bo = (board *) malloc(sizeof(board));
+  std::cout << "Enter your difficulty level: 1 (Easy), 2 (Medium), 3 (Hard)";
+  std::cin >> in ;
   if(in == '1') {
 
     bo->num_mines = 5;
@@ -32,6 +50,12 @@ int main(int argc, char** argv) {
   gen_selector(bo);
 
   init_curses();
+  uint32_t k;
+  mvprintw(1, 30, "%s", vim);
+
+  if((k = getch() == 'p')) {
+    clear();
+  }
 
   print_map_w_m(bo);
 
@@ -44,7 +68,7 @@ int main(int argc, char** argv) {
     return 0;
   }
 
-  free(bo);
+  //free(bo);
 
   return 0;
 
