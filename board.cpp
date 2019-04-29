@@ -87,10 +87,11 @@ void get_mines(board *b, uint32_t num_mines)
 
 }
 
-void reveal_tile(board *b, uint32_t y, uint32_t x)
+void reveal_tile(board *b, uint32_t y, uint32_t x, uint32_t count)
 {
-  y = b->sel.pos[0];
-  x = b->sel.pos[1];
+  if(count % 2 == 0) {
+    return;
+  }
 
   if (y < 0 || y >= MAP_Y) {
     return;
@@ -99,25 +100,27 @@ void reveal_tile(board *b, uint32_t y, uint32_t x)
   if( x < 0 || x >= MAP_X) {
     return;
   }
-  
-     if(b->map[y][x].revealed != 0) {
-     return;
-     }
-     
+
+  if(b->map[y][x].revealed != 0) {
+    return;
+  }
+
   if(b->map[y][x].flag == 1) return;
 
   if(b->map[y][x].is_mine == 2) {
     b->eog = true;
-  } else {
-    if(b->map[y][x].revealed == 0) {
-      b->map[y][x].revealed = 1;
+    return;
 
-      reveal_tile(b, y - 1, x);
-      reveal_tile(b, y, x - 1);
-      reveal_tile(b, y, x + 1);
-      reveal_tile(b, y + 1, x);
+  } else {
+    b->map[y][x].revealed = 1;
+
+    if(b->map[y][x].revealed == 1) {
+
+      reveal_tile(b, y - 1, x, count++);
+      reveal_tile(b, y, x - 1, count++);
+      reveal_tile(b, y, x + 1, count++);
+      reveal_tile(b, y + 1, x, count++);
     }
   }
-
 }
 

@@ -32,12 +32,11 @@ void print_map_w_m(board *b)
   uint32_t j;
 
   for(i = 0; i < MAP_Y; i++) {
-        
+
 
     for(j = 0; j < MAP_X; j++) {
       if(( (b->sel.pos[0] != i) || b->sel.pos[1] != j)) {
 
-        if(b->map[i][j].is_mine == 0 ) {
 
           if(b->map[i][j].flag == 1) {
             attron(COLOR_PAIR(COLOR_RED));
@@ -46,21 +45,19 @@ void print_map_w_m(board *b)
 
           } else { 
             if(b->map[i][j].revealed == 1) {
-              attron(COLOR_PAIR(COLOR_BLUE));
-
-              mvaddch(i + 1, j + 1, '.');
-              attroff(COLOR_PAIR(COLOR_BLUE));
+              if(b->m_num[i][j] > 0) {
+                attron(COLOR_PAIR(COLOR_CYAN));
+                mvprintw(i+1, j+1, "%d", b->m_num[i][j]);
+                attroff(COLOR_PAIR(COLOR_CYAN));
+              } else {
+                attron(COLOR_PAIR(COLOR_BLUE));
+                mvaddch(i + 1, j + 1, '.');
+                attroff(COLOR_PAIR(COLOR_BLUE));
+              }
             } else {
               mvaddch(i + 1, j + 1, '#');
             }
-          } 
-        } else if (b->map[i][j].is_mine == 2) {
-
-          attron(COLOR_PAIR(COLOR_RED));
-          mvaddch(i + 1, j + 1, 'M');
-          attroff(COLOR_PAIR(COLOR_RED));
-
-        }
+        } 
       } else if( ( (b->sel.pos[0] == i) &&
             (b->sel.pos[1] == j) ) ) {
         attron(COLOR_PAIR(COLOR_GREEN));
@@ -167,6 +164,7 @@ void set_flag(board *b)
 
 void move_selector(board *b) {
   uint32_t key;
+  uint32_t i_count = 1;
 
   while((key = getch())) {
     move(0, 0);
@@ -234,7 +232,7 @@ void move_selector(board *b) {
         break;
 
       case 'i':
-        reveal_tile(b, b->sel.pos[0], b->sel.pos[1]);
+        reveal_tile(b, b->sel.pos[0], b->sel.pos[1], i_count);
         refresh();
         break; 
       case 'n': 
