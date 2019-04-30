@@ -4,8 +4,8 @@ CXXFLAGS = -Wall -Werror -ggdb3 -funroll-loops -DTERM=$(TERM)
 LDFLAGS = -lncurses
 RM = rm -f
 
-BIN = minesweep 
-OBJS = board.o minesweep.o io.o
+BIN = vimsweep 
+OBJS = board.o vimsweep.o io.o
 
 all: $(BIN)
 $(BIN):	$(OBJS)

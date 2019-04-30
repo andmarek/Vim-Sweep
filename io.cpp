@@ -3,7 +3,17 @@
 #include <ncurses.h>
 #include "board.h"
 #include <math.h>
-void init_curses(void) {
+
+void init_curses(void);
+void io_reset(void);
+void print_map_w_m(board *b);
+void io_numbers(board *b);
+bool validate_move(int pos);
+void set_flag(board *b);
+void move_selector(board *b);
+
+void init_curses(void) 
+{
   initscr();
   raw();
   noecho();
@@ -17,7 +27,6 @@ void init_curses(void) {
   init_pair(COLOR_CYAN, COLOR_CYAN, COLOR_BLACK);
   init_pair(COLOR_MAGENTA, COLOR_MAGENTA, COLOR_BLACK);
   init_pair(COLOR_BLUE, COLOR_BLUE, COLOR_BLACK);
-
 }
 
 void io_reset(void) 
@@ -27,20 +36,15 @@ void io_reset(void)
 
 void print_map_w_m(board *b)
 {
-
-  uint32_t i;
-  uint32_t j;
-
+  uint32_t i, j;
+  
   for(i = 0; i < MAP_Y; i++) {
-
-
     for(j = 0; j < MAP_X; j++) {
-      if(( (b->sel.pos[0] != i) || b->sel.pos[1] != j)) {
+      if(( b->sel.pos[0] != i || b->sel.pos[1] != j )) {
         if(b->map[i][j].flag == 1) {
           attron(COLOR_PAIR(COLOR_RED));
           mvaddch(i + 1, j + 1, b->map[i][j].symb);
           attroff(COLOR_PAIR(COLOR_RED));
-
         } else { 
           if(b->map[i][j].revealed == 1) {
             if(b->m_num[i][j] > 0) {
@@ -79,9 +83,6 @@ void print_map_w_m(board *b)
   mvprintw(0, 16, "%d",6 );
   mvprintw(16, 0, "%d",6 );
   attroff(COLOR_PAIR(COLOR_MAGENTA));
-
-
-
 }
 
 void io_numbers(board *b)
@@ -90,45 +91,30 @@ void io_numbers(board *b)
   uint32_t i;
   uint32_t j;
 
-
   for(i = 0; i < MAP_Y; i++) {
     for(j = 0; j < MAP_X; j++) {
-      /* If selector isn't at this position */
       if(( (b->sel.pos[0] != i) || b->sel.pos[1] != j)) {
-        /* if it's not a mine */
         if(b->map[i][j].is_mine == 0 ) {
-
-          /* if the number >= 1 */
           if(b->m_num[i][j] >= 1) {
             attron(COLOR_PAIR(COLOR_CYAN));
-            /* Print its number */
             mvprintw(i+1, j+1, "%d", b->m_num[i][j]);
             attroff(COLOR_PAIR(COLOR_CYAN));
           }else {
-            /* Otherwise, add a # */
             mvaddch(i+1, j+1, '#');
           }
-
         } else if (b->map[i][j].is_mine == 2) {
-          /* If it is a mine, print it red with an M */
           attron(COLOR_PAIR(COLOR_RED));
-
           mvaddch(i + 1, j + 1, 'M');
-
           attroff(COLOR_PAIR(COLOR_RED));
-
         }
       } else if( ( (b->sel.pos[0] == i) &&
             (b->sel.pos[1] == j) ) ) {
-
-        /* If it's the selector, print a green V */
         attron(COLOR_PAIR(COLOR_GREEN));
         mvaddch(i + 1, j + 1, 'V'); 
         attroff(COLOR_PAIR(COLOR_GREEN)); 
       }
     }
   }
-
   refresh();
 }
 
@@ -141,7 +127,6 @@ bool validate_move(int pos)
   move(18,0);
   clrtoeol();
   return true;
-
 }
 
 void set_flag(board *b)
@@ -162,24 +147,26 @@ void set_flag(board *b)
     mvprintw(0, 0, "right: %d", b->flag_m);
     refresh();
   }
+
   if(b->flag_m <= b->num_mines) {
     b->eog = true;
     endwin();
   }
 }
 
-void move_selector(board *b) {
+void move_selector(board *b)
+{
   uint32_t key;
   uint32_t i_count = 1;
 
   while((key = getch())) {
     move(0, 0);
     clrtoeol();
+
     switch(key) {
       case '0':
         b->sel.pos[1] = 0;
         break;
-
       case 'g':
         if((key = getch()) == 'g') {
           b->sel.pos[0] = 0;
@@ -187,15 +174,12 @@ void move_selector(board *b) {
           move_selector(b);
         }
         break;
-
       case 'G':
         b->sel.pos[0] = 15;
         break;
-
       case 'A':
         b->sel.pos[1] = 15;
         break;
-
       case 'h':
         if(!(validate_move(b->sel.pos[1]-1))) {
           break;
@@ -204,7 +188,6 @@ void move_selector(board *b) {
         }
         refresh();
         break;
-
       case 'j':
         if(!(validate_move(b->sel.pos[0]+1))) {
           break;
@@ -213,7 +196,6 @@ void move_selector(board *b) {
         }
         refresh();
         break;
-
       case 'k':
         if(!(validate_move(b->sel.pos[0]-1))) {
           break;
@@ -222,7 +204,6 @@ void move_selector(board *b) {
         }
         refresh();
         break;
-
       case 'l':
         if(!(validate_move(b->sel.pos[1]+1))) {
           break;
@@ -231,12 +212,10 @@ void move_selector(board *b) {
         }
         refresh();
         break;
-
-      case 'm': /* Set a flag, ENTER */
+      case 'm':
         set_flag(b); 
         refresh();
         break;
-
       case 'i':
         reveal_tile(b, b->sel.pos[0], b->sel.pos[1], i_count);
         refresh();
@@ -246,12 +225,10 @@ void move_selector(board *b) {
         refresh();
         move_selector(b);
         break;
-
       case 'r':
         print_map_w_m(b);
         refresh();
         break;
-
       case ':':
         mvprintw(17, 0, ":");
         if((key = getch()) == 'q') {
